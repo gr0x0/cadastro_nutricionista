@@ -24,9 +24,9 @@ titulo.textContent = "Banana";
 var titulo2 = document.querySelector(".titulo");
 titulo2.textContent = "Aparecida Nutricionista";
 
-/* Agora para que a página calcule o IMC (peso/altura^2) de cada paciente automaticamente: podemos buscar uma informação apenas na tag específica tr de carregada
-		paciente ao usarmos console.log(paciente). Mas precisamos definir para cada paciente um id, uma vez que devemos percorrer um a um. Portanto,
-		a tag tr inicial do primeiro paciente ficou <tr class="paciente" id="paciente1">.
+/* Agora para que a página calcule o IMC (peso/altura^2) de cada paciente automaticamente: podemos buscar uma informação apenas na tag específica
+		tr de carregada paciente ao usarmos console.log(paciente). Mas precisamos definir para cada paciente um id, uma vez que devemos percorrer
+		um a um. Portanto, a tag tr inicial do primeiro paciente ficou <tr class="paciente" id="paciente1">.
 		É importante notar que para selecionarmos um id CSS com querySelector, utilizamos '#<nome do id>'. */
 var paciente = document.querySelector("#paciente1");
 console.log(paciente);
@@ -57,4 +57,40 @@ if (altura <= 0 || altura >= 3.00) {
 if (alturaEhValida && pesoEhValido) {
     imc = peso / (altura * altura);
 		paciente.querySelector(".info-imc").textContent = imc;
+}
+
+/* Fazendo um loop para todos os pacientes, usamos querySelectorAll(), que nos retorna um array com todos os elementos que pertençam à classe que
+		passarmos como parâmetro. Dessa forma, podemos calcular o imc para todos os pacientes.
+		Adicionalmente, para tornarmos os erros da tabela mais identificáveis, pintaremos as linhas problemáticas com vermelho. Para tal, poderíamos
+		usar CSS com paciente.style.color = "<color>" para modificarmos a cor da fonte, ou paciente.style.backgroundColor = "<color>" para modificarmos
+		a cor de fundo. Porém, o mais inteligente a se fazer é manter sempre toda e qq info relacionada ao estilo da página no arquivo .css, e portanto
+		lá defini a classe paciente-invalido que usamos aqui, chamada através de paciente.classList.add("paciente-invalido");. */
+
+var lista_pacientes = document.querySelectorAll(".paciente");
+console.log(lista_pacientes);
+
+for(var i = 0; i < lista_pacientes.length; i++){
+	paciente = lista_pacientes[i];
+	peso = paciente.querySelector(".info-peso").textContent;
+	altura = paciente.querySelector(".info-altura").textContent;
+	imc = peso / (altura * altura);
+	paciente.querySelector(".info-imc").textContent = imc.toFixed(2);
+
+	pesoEhValido = true;
+	alturaEhValida = true;
+
+	if (peso <= 0 || peso >= 1000) {
+	    pesoEhValido = false;
+			paciente.classList.add("paciente-invalido");
+			paciente.querySelector(".info-imc").textContent = "Peso inválido!";
+	}
+	if (altura <= 0 || altura >= 3.00) {
+	    alturaEhValida = false;
+			paciente.classList.add("paciente-invalido");
+			paciente.querySelector(".info-imc").textContent = "Altura inválida!";
+	}
+
+	if (alturaEhValida && pesoEhValido) {
+			paciente.querySelector(".info-imc").textContent = imc.toFixed(2);
+	}
 }
