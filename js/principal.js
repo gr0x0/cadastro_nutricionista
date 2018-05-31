@@ -94,3 +94,42 @@ for(var i = 0; i < lista_pacientes.length; i++){
 			paciente.querySelector(".info-imc").textContent = imc.toFixed(2);
 	}
 }
+
+/* Inserida a estrutura de cadastro no HTML, usamos o conceito de evento para percebermos o click no botão. Para facilitar, inserimos o tratamento
+		desse evento numa função, definida através de function. O acesso aos dados de preenchimento do formulário vem por .<label>.value. Para se criar
+		novos elementos no HTML, usamos document.createElement("<tipo de tag>"). */
+document.querySelector("#adicionar-paciente").addEventListener("click", function (){
+    event.preventDefault(); // Esse comando impede que a página recarregue após click no botão, que é o default.
+		console.log("Oi eu sou o botao e fui clicado");
+
+		// Pegando os valores.
+		var form = document.querySelector("#form-adiciona");
+		var nome = form.nome.value;
+    var peso = form.peso.value;
+    var altura = form.altura.value;
+    var gordura = form.gordura.value;
+
+		// Criando a linha e os elementos da linha.
+		var pacienteTr = document.createElement("tr");
+		var nomeTd = document.createElement("td");
+    var pesoTd = document.createElement("td");
+    var alturaTd = document.createElement("td");
+    var gorduraTd = document.createElement("td");
+    var imcTd = document.createElement("td");
+
+		// Inserindo os valores do formulário nos elementos da linha.
+		nomeTd.textContent = nome;
+    pesoTd.textContent = peso;
+    alturaTd.textContent = altura;
+    gorduraTd.textContent = gordura;
+
+		// Inserindo os elementos de linha na linha.
+		pacienteTr.appendChild(nomeTd);
+    pacienteTr.appendChild(pesoTd);
+    pacienteTr.appendChild(alturaTd);
+    pacienteTr.appendChild(gorduraTd);
+
+		// Adicionando a linha, já completa, na tabela.
+		var tabela = document.querySelector("#tabela-pacientes");
+		tabela.appendChild(pacienteTr);
+	});
