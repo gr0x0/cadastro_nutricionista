@@ -1,7 +1,9 @@
 /* Inserida a estrutura de cadastro no HTML, usamos o conceito de evento para percebermos o click no botão. Para facilitar, inserimos o tratamento
 		desse evento numa função, definida através de function. O acesso aos dados de preenchimento do formulário vem por .<label>.value. Para se criar
 		novos elementos no HTML, usamos document.createElement("<tipo de tag>"). */
-document.querySelector("#adicionar-paciente").addEventListener("click", function (){
+var botaoAdicionar = document.querySelector("#adicionar-paciente");
+botaoAdicionar.addEventListener("click", function(event) {
+
     event.preventDefault(); // Esse comando impede que a página recarregue após click no botão, que é o default.
 
     // Pegando os valores do formulário.
@@ -9,8 +11,16 @@ document.querySelector("#adicionar-paciente").addEventListener("click", function
     var paciente = obtemDadosDoFormulario(form);
     console.log(paciente);
 
-    // Cria a linha do paciente e a preenche
+    // Cria a linha do paciente e a preenche.
     var pacienteTr = criaTr(paciente);
+
+    //Validando os dados do paciente.
+    var erros = validaPaciente(paciente);
+    console.log(erros);
+    if(erros.length > 0){
+      exibeMensagensDeErro(erros);
+      return; //Sai sem inserir o paciente na tabela.
+    }
 
 		// Adicionando a linha, já completa, na tabela.
 		var tabela = document.querySelector("#tabela-pacientes");
@@ -43,7 +53,7 @@ function criaTr(paciente) {
 		pacienteTr.appendChild(criaTd(paciente.nome, "info-nome"));
     pacienteTr.appendChild(criaTd(paciente.peso, "info-peso"));
     pacienteTr.appendChild(criaTd(paciente.altura, "info-altura"));
-    pacienteTr.appendChild(criaTd(paciente.gordura, "info-gordura");
+    pacienteTr.appendChild(criaTd(paciente.gordura, "info-gordura"));
     pacienteTr.appendChild(criaTd(calculaImc(peso,altura), "info-imc"));
 
     return pacienteTr;
@@ -55,4 +65,33 @@ function criaTd(dado, classe){
     td.classList.add(classe);
 
     return td;
+}
+
+function validaPaciente(paciente) {
+    var erros = [];
+
+    if (paciente.nome.length == 0)
+        erros.push("O nome não pode ser em branco!");
+    if (paciente.gordura.length == 0)
+        erros.push("A gordura não pode ser em branco!");
+    if (paciente.peso.length == 0)
+        erros.push("O peso não pode ser em branco!");
+    if (paciente.altura.length == 0)
+        erros.push("A altura não pode ser em branco!");
+    if (!validaPeso(paciente.peso))
+        erros.push("Peso é inválido!"); // Assim se adiciona em um array, com .push().
+    if (!validaAltura(paciente.altura))
+        erros.push("Altura é inválida!");
+
+    return erros;
+}
+
+function exibeMensagensDeErro(erros){
+    var ul = document.querySelector("#mensagens-erro");
+     ul.innerHTML = ""; // O innerHTML permite controlar o HTML interno de um elemento, e assim estamos apagando as mensagens de erro antigas.
+    erros.forEach(function(erro){ // O forEach percorre todos os elementos.
+        var li = document.createElement("li");
+        li.textContent = erro;
+        ul.appendChild(li);
+    });
 }
