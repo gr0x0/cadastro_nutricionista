@@ -11,9 +11,6 @@ botaoAdicionar.addEventListener("click", function(event) {
     var paciente = obtemDadosDoFormulario(form);
     console.log(paciente);
 
-    // Cria a linha do paciente e a preenche.
-    var pacienteTr = criaTr(paciente);
-
     //Validando os dados do paciente.
     var erros = validaPaciente(paciente);
     console.log(erros);
@@ -22,9 +19,7 @@ botaoAdicionar.addEventListener("click", function(event) {
       return; //Sai sem inserir o paciente na tabela.
     }
 
-		// Adicionando a linha, já completa, na tabela.
-		var tabela = document.querySelector("#tabela-pacientes");
-		tabela.appendChild(pacienteTr);
+    adicionaPacientesParaTabela(paciente)
 
     form.reset(); // Apaga os dados preenchidos na tabela.
 	});
@@ -88,10 +83,16 @@ function validaPaciente(paciente) {
 
 function exibeMensagensDeErro(erros){
     var ul = document.querySelector("#mensagens-erro");
-     ul.innerHTML = ""; // O innerHTML permite controlar o HTML interno de um elemento, e assim estamos apagando as mensagens de erro antigas.
+    ul.innerHTML = ""; // O innerHTML permite controlar o HTML interno de um elemento, e assim estamos apagando as mensagens de erro antigas.
     erros.forEach(function(erro){ // O forEach percorre todos os elementos.
         var li = document.createElement("li");
         li.textContent = erro;
         ul.appendChild(li);
     });
+}
+
+function adicionaPacientesParaTabela(paciente) {
+  var pacienteTr = criaTr(paciente); // Cria a linha do paciente e a preenche.
+  var tabela = document.querySelector("#tabela-pacientes");
+  tabela.appendChild(pacienteTr); // Adicionando a linha, já completa, na tabela.
 }
